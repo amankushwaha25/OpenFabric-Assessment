@@ -9,7 +9,7 @@ from ontology_dc8f06af066e4a7880a5938933236037.simple_text import SimpleText
 from openfabric_pysdk.context import Ray, State
 from openfabric_pysdk.loader import ConfigClass
 import json
-from transformer import pipeline
+from transformers import pipeline
 
 
 ############################################################
