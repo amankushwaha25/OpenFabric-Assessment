@@ -11,6 +11,8 @@ from openfabric_pysdk.loader import ConfigClass
 import json
 from transformers import pipeline
 
+question_answerer = pipeline("question-answering", model="kushwahaaman/my_awesome_qa_model", token='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')
+
 
 ############################################################
 # Callback function called on update config
@@ -24,17 +26,12 @@ def config(configuration: Dict[str, ConfigClass], state: State):
 # Callback function called on each execution pass
 ############################################################
 def execute(request: SimpleText, ray: Ray, state: State) -> SimpleText:
-
-    # instantiate the fine tuned pipeline
-    model = pipeline("question-answering", model="my_awesome_qa_model")
-
     #load the context
-    with open('context_file', "r") as file:
+    with open('context_file.json', "r") as file:
         context = json.load(file)
     output = []
-
-    # iterate over the text to generate the answer
+    
     for text in request.text:
-        answer = model(question = text, context = context)
-        output.append(answer)
+        output.append(question_answerer(question=text, context=context)['answer'])
+
     return SchemaUtil.create(SimpleText(), dict(text=output))
